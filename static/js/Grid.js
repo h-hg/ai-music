@@ -48,11 +48,19 @@ class Grid{
     get waitTime() {
         return this._waitTime;
     }
-    get data() {
+/*     get data() {
         return this.cellsMgr.data;
     }
     set data(val) {
         this.cellsMgr.data = val;
+        this.setGridOffsetX(0);
+    } */
+    
+    getNoteSequence() {
+        return this.cellsMgr.getNoteSequence();
+    }
+    setNoteSequence(noteSequence) {
+        return this.cellsMgr.setNoteSequence(noteSequence);
         this.setGridOffsetX(0);
     }
     isPlaying() {
@@ -123,12 +131,12 @@ class Grid{
         //console.log(this.waitTime);
         setTimeout(this.playHelper.bind(this, nextCol), this.waitTime);
         //api 
-        let playedCellRow = this.cellsMgr.getClickedRow(this.cellsMgr.curCol);
-        let state = this.cellsMgr.getState(col, playedCellRow);
+        //let playedCellRow = this.cellsMgr.getClickedRow(this.cellsMgr.curCol);
+        //let state = this.cellsMgr.getState(col, playedCellRow);
         
         //play sound
-        this.player.playSound(playedCellRow,state);
-
+        //this.player.playSound(playedCellRow,state);
+        this.player.playSound(this.cellsMgr.getNote(col));
         let c1 = (this.cellsMgr.curCol * this.CELL_HEIGHT) >= (this.gridOffsetX + this.gridOffsetX + this.viewWidth) / 2,//判断当前列是否在canvas中间及其后面
             c2 = this.gridOffsetX + this.viewWidth < this.contentWidth;//判断当前slider是否还可以向后移动
         if(c1 && c2) {

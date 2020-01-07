@@ -1,8 +1,44 @@
 //cell color mangement
 class CellsMgr {
     constructor(cols, rows) {
+        this.initTable();
         this.initColors();
         this.reset(cols, rows);
+    }
+    initTable() {
+        this.index2note = [
+            ['Rest', 'B4'],
+            ['Rest', 'A4', 'A#4'],
+            ['Rest', 'G4', 'G#4'],
+            ['Rest', 'F4', 'F#4'],
+            ['Rest', 'E4'],
+            ['Rest', 'D4', 'D#4'],
+            ['Rest', 'C4', 'C#4'],
+            ['Rest', 'B3'],
+            ['Rest', 'A3', 'A#3'],
+            ['Rest', 'G3', 'G#3'],
+            ['Rest', 'F3', 'F#3'],
+            ['Rest', 'E3'],
+            ['Rest', 'D3', 'D#3'],
+            ['Rest', 'C3', 'C#3']
+        ];
+        this.note2index = {
+            "Rest": -1,
+            'B4':0,
+            'A4':1, 'A#4':1,
+            'G4':2, 'G#4':2,
+            'F4':3, 'F#4':3,
+            'E4':4,
+            'D4':5, 'D#4':5,
+            'C4':6, 'C#4':6,
+            'B3':7,
+            'A3':8, 'A#3':8,
+            'G3':9, 'G#3':9,
+            'F3':10, 'F#3':10,
+            'E3':11,
+            'D3':12, 'D#3':12,
+            'C3':13, 'C#3':13
+        };
     }
     initColors() {
         this.colors = {
@@ -15,7 +51,7 @@ class CellsMgr {
                 "rgb(149, 198, 49)",
                 "rgb(17, 130, 109)",
                 "rgb(91, 55, 204)",
-                "rgb(234, 87, 178)"    
+                "rgb(234, 87, 178)"
             ],
             ONE_CUR: [
                 "rgb(248, 202, 212)",
@@ -46,7 +82,7 @@ class CellsMgr {
             ]
         };
     }
-    reset(cols, rows) {
+    reset(cols, rows = 14) {
         this._cols = cols;
         this._rows = rows;
         this._curCol = -1;
@@ -55,8 +91,8 @@ class CellsMgr {
         this._rowClicked = [];
         //_colStates[i] 表示 第i列第_colStates[i]行 选中的状态，状态值只有三种情况，分别如下，0 - unclicked, 1 - once clicked, 2 - double clicked
         this._colStates = [];
-        
-        for(let i = 0; i < this._cols; ++i) {
+
+        for (let i = 0; i < this._cols; ++i) {
             this._rowClicked[i] = -1;
             this._colStates[i] = 0;
         }
@@ -73,7 +109,7 @@ class CellsMgr {
     prevCol(col) {
         return (col - 1 + this._cols) % this._cols;
     }
-    get data() {
+/*     get data() {
         return {
             "cols": this._cols,
             "rows": this._rows,
@@ -86,7 +122,7 @@ class CellsMgr {
         this._rows = val.rows;
         this._rowClicked = val.rowClicked;
         this._colStates = val.colStates;
-    }
+    } */
     get curCol() {
         return this._curCol;
     }
@@ -102,7 +138,7 @@ class CellsMgr {
         return this._rowClicked[col];
     }
     getColor(col, row) {
-        switch(this.getState(col, row)) {
+        switch (this.getState(col, row)) {
             case 0:
                 return this.colors["ZERO" + (col == this.curCol ? "_CUR" : "")];
             case 1:
@@ -114,14 +150,36 @@ class CellsMgr {
     addClick(col, row) {
         //0:1,  1:2,  2:2, 3:2,  4:1,  5:2,  6:2
         //7;1,  8:2,  9:2, 10:2, 11:1, 12:2  13:2
-        if(this._rowClicked[col] == row) {
-            this._colStates[col] = (this._colStates[col] + 1) % ( ([0, 4, 7, 11].indexOf(row) == -1) ? 3 : 2);
-            if(this._colStates[col] == 0) {
+        if (this._rowClicked[col] == row) {
+            this._colStates[col] = (this._colStates[col] + 1) % (([0, 4, 7, 11].indexOf(row) == -1) ? 3 : 2);
+            if (this._colStates[col] == 0) {
                 this._rowClicked[col] = -1;
             }
         } else {
             this._rowClicked[col] = row;
             this._colStates[col] = 1;
+        }
+    }
+    getNote(col) {
+        let clickedRow = this._rowClicked[col]; //指定列被选择的列
+        return clickedRow == -1 ? "Rest" : this.index2note[clickedRow][this._colStates[col]];
+    }
+    getNoteSequence() {
+        let ret = new Array(this.cols);
+        for (let i = 0; i < ret.length; ++i) {
+            ret[i] = this.getNote(i);
+        }
+        return ret;
+    }
+
+    setNoteSequence(noteSequence) {
+        this.reset(noteSequence.length);
+        for (let i = 0; i < noteSequence.length; ++i) {
+            if(noteSequence[i] == "Rest") {
+                continue;
+            }
+            this._rowClicked[i] = note2index[noteSequence[i]];
+            this._colStates[i] = noteSequence[i].length == 2 ? 1 : 2;
         }
     }
 }
