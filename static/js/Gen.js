@@ -15,6 +15,7 @@ class Gen {
         }
     }
 
+    //return an note array
     genMelody(noteSequence) {
         let midi = this.loadFromUrl('./predict', noteSequence);
         let generatedNotes = [];
