@@ -86,9 +86,12 @@ def generate_melody(input_list):
 
     gen_sequence = melody_rnn.generate(input_ns, generator_options)
 
-    mm.sequence_proto_to_midi_file(gen_sequence, 'predict.mid')
+    output = tempfile.NamedTemporaryFile()
+    mm.sequence_proto_to_midi_file(gen_sequence, output.name)
+    output.seek(0)
+    return output
 
 
 # test
-notes = ['C3', 'D3', 'E3', 'C3', 'C3', 'D3', 'E3', 'C3']
-generate_melody(notes)
+# notes = ['C3', 'D3', 'E3', 'C3', 'C3', 'D3', 'E3', 'C3']
+# generate_melody(notes)
