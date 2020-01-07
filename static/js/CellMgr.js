@@ -178,7 +178,7 @@ class CellsMgr {
             if(noteSequence[i] == "Rest") {
                 continue;
             }
-            this._rowClicked[i] = note2index[noteSequence[i]];
+            this._rowClicked[i] = this.note2index[noteSequence[i]];
             this._colStates[i] = noteSequence[i].length == 2 ? 1 : 2;
         }
     }
