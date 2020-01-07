@@ -2,16 +2,17 @@ let grid = document.getElementById("grid");
 let gridController = new Grid(grid, 28);
 
 
-let playbutton = document.getElementById("play-button");
-playbutton.onclick = function() {
+let playButton = document.getElementById("play-button");
+let play = function() {
     if(gridController.isPlaying()){
         gridController.stop();
-        playbutton.innerHTML = "<i class=\"fa fa-play\"></i>";
+        playButton.innerHTML = "<i class=\"fa fa-play\"></i>";
     }else {
         gridController.play();
-        playbutton.innerHTML = "<i class=\"fa fa-stop\"></i>";
+        playButton.innerHTML = "<i class=\"fa fa-stop\"></i>";
     }
 };
+playButton.addEventListener("click", play, false);
 
 let gridScrollBarH = new ScrollBarH(
     document.getElementById("slider-h"),
@@ -28,27 +29,6 @@ let gridScrollBarV = new ScrollBarV(
     "gridOffsetYChange"
 );
 
-
-document.addEventListener("gridOffsetXChange", function(e) {
-    if(gridController.isPlaying() == false)
-        gridController.setGridOffsetX(e.detail.ratio);
-}, false);
-
-
-document.addEventListener("gridOffsetYChange", function(e) {
-    if(gridController.isPlaying() == false)
-        gridController.setGridOffsetY(e.detail.ratio);
-}, false);
-document.addEventListener("play", function(e) {
-    gridScrollBarH.disableMove();
-    gridScrollBarV.disableMove();
-},false);
-document.addEventListener("stop", function(e) {
-    gridScrollBarH.enableMove();
-    gridScrollBarV.enableMove();
-},false);
-
-
 let melodyGenerator = new Gen();
 let predictButton = document.getElementById("predict-button");
 function predict() {
@@ -63,12 +43,28 @@ function predict() {
         gridController.setNoteSequence(generatedMelody);
     }, 1000);
 }
-
 predictButton.addEventListener("click", predict, false);
 
 
-//test
-let setttingButton = document.getElementById("setting-button");
-setttingButton.onclick = function() {
+document.addEventListener("gridOffsetXChange", function(e) {
+    if(gridController.isPlaying() == false)
+        gridController.setGridOffsetX(e.detail.ratio);
+}, false);
+document.addEventListener("gridOffsetYChange", function(e) {
+    if(gridController.isPlaying() == false)
+        gridController.setGridOffsetY(e.detail.ratio);
+}, false);
+document.addEventListener("play", function(e) {
+    gridScrollBarH.disableMove();
+    gridScrollBarV.disableMove();/*播放的时候禁止预测*/
+    predictButton.removeEventListener("click", predict, false);/*播放的时候禁止预测，可能需要给那个*/
+},false);
+document.addEventListener("stop", function(e) {
     gridScrollBarH.enableMove();
-};
+    gridScrollBarV.enableMove();
+    predictButton.addEventListener("click", predict, false);
+},false);
+
+
+//test
+
