@@ -21,7 +21,8 @@ class Grid{
             LINE:"rgb(196, 233, 251)"
         };
         
-        
+        this.player = new Player();
+
         this.reset(cols, rows);
         this.addListener();
     }
@@ -123,7 +124,11 @@ class Grid{
         setTimeout(this.playHelper.bind(this, nextCol), this.waitTime);
         //api 
         let playedCellRow = this.cellsMgr.getClickedRow(this.cellsMgr.curCol);
-        //insert player here
+        let state = this.cellsMgr.getState(col, playedCellRow);
+        
+        //play sound
+        this.player.playSound(playedCellRow,state);
+
         let c1 = (this.cellsMgr.curCol * this.CELL_HEIGHT) >= (this.gridOffsetX + this.gridOffsetX + this.viewWidth) / 2,//判断当前列是否在canvas中间及其后面
             c2 = this.gridOffsetX + this.viewWidth < this.contentWidth;//判断当前slider是否还可以向后移动
         if(c1 && c2) {
