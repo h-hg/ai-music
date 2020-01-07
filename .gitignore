@@ -24,3 +24,5 @@ htmlcov/
 
 tmp/
 test/
+*.mid
+.vscode/
