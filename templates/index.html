@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Ai Music</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/static/css/index.css'>
+
+</head>
+
+<body>
+    <div id="topbar">
+        <div id="title">Ai Music</div>
+        <div id="topbar-right">
+            <div id="user">
+                <img src="https://pic2.zhimg.com/v2-2036453227325b1f0496274eb34704ab_is.jpg" id="avatar">
+                <div id="meanu">
+                    <a>个人信息</a>
+                    <a>你的分享</a>
+                    <a>退出</a>
+                </div>
+            </div>
+            
+            <div id="about">关于</div>
+        </div>
+    </div>
+    <div id="grid-container">
+        <canvas id="grid"></canvas>
+        <div class="scrollbar scrollbar-horizontal">
+            <div class="scrollbar-track" id="track-h">
+                <div class="scrollbar-slider" id="slider-h"></div>
+            </div>
+        </div>
+        <div class="scrollbar scrollbar-vertical">
+            <div class="scrollbar-track" id="track-v">
+                <div class="scrollbar-slider" id="slider-v"></div>
+            </div>
+        </div>
+    </div>
+    <div id="bottom">
+        <div id="bottom-left">
+            <button id="play-button"><i class="fa fa-play"></i></button><!--fa fa-stop-->
+            <button id="predict-button"><i class="fa fa-music"></i></button>
+        </div>
+        <div id="bottom-mid">
+            <label>Tempo</label>
+            <input type="range" min="0" max="100">
+            <input classs="input-number" min="40" max="240">
+
+        </div>
+        <div id="bottom-right">
+            <button id="setting-button"><i class="fa fa-cog"></i></button>
+            <button id="save-button"><i class="fa fa-save"></i></button>
+            <button id="share-button"><i class="fa fa-share"></i></button>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="https://unpkg.com/tone@13.4.9/build/Tone.js"></script>
+<script type="text/javascript" src="https://unpkg.com/@tonejs/midi"></script>
+<script type="text/javascript" src="/static/js/CellMgr.js"></script>
+<script type="text/javascript" src="/static/js/ScrollBar.js"></script>
+<script type="text/javascript" src="/static/js/Gen.js"></script>
+<script type="text/javascript" src="/static/js/Grid.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+</html>
