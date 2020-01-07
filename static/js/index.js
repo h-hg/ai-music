@@ -1,6 +1,7 @@
 let grid = document.getElementById("grid");
 let gridController = new Grid(grid, 28);
 
+
 let playbutton = document.getElementById("play-button");
 playbutton.onclick = function() {
     if(gridController.isPlaying()){
@@ -27,10 +28,12 @@ let gridScrollBarV = new ScrollBarV(
     "gridOffsetYChange"
 );
 
+
 document.addEventListener("gridOffsetXChange", function(e) {
     if(gridController.isPlaying() == false)
         gridController.setGridOffsetX(e.detail.ratio);
 }, false);
+
 
 document.addEventListener("gridOffsetYChange", function(e) {
     if(gridController.isPlaying() == false)
@@ -46,12 +49,22 @@ document.addEventListener("stop", function(e) {
 },false);
 
 
-//test
+let melodyGenerator = new Gen();
 let predictButton = document.getElementById("predict-button");
-predictButton.onclick = function() {
-    gridScrollBarH.disableMove();
-};
+function predict() {
+    let notes = gridController.getNoteSequence();
+    console.log("notes");
+    console.log(notes);
+    let generatedMelody = melodyGenerator.genMelody(notes);
+    console.log("gen:");
+    console.log(generatedMelody);
+    gridController.setNoteSequence(generatedMelody);
+}
 
+predictButton.addEventListener("click", predict, false);
+
+
+//test
 let setttingButton = document.getElementById("setting-button");
 setttingButton.onclick = function() {
     gridScrollBarH.enableMove();
