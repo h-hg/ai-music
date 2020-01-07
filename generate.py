@@ -19,10 +19,10 @@ generator_map = melody_rnn_sequence_generator.get_generator_map()
 melody_rnn = generator_map['attention_rnn'](checkpoint=None, bundle=bundle)
 melody_rnn.initialize()
 
-bar_length = 4
+# bar_length = 4
 note_table = ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
               'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'Rest']
-total_time = 0.5 * 8 * bar_length
+# total_time = 0.5 * 8 * bar_length
 velocity = 80
 
 
@@ -76,7 +76,8 @@ def generate_melody(input_list):
     last_end_time = (max(n.end_time for n in input_ns.notes)
                      if input_ns.notes else 0)
     # length of generated piece
-    total_seconds = total_time - last_end_time
+    input_length = len(input_list)
+    total_seconds = input_length * 0.5 * 6 - last_end_time
 
     # options
     generator_options = generator_pb2.GeneratorOptions()

@@ -22,6 +22,9 @@ def predict():
     # notes = ['C3', 'D3', 'E3', 'C3', 'C3', 'D3', 'E3', 'C3']
     notes = json.loads(request.data)
     # print(notes)
+    while(notes[-1] == 'Rest'):
+        notes.pop()
+            
     ret_midi = generate_melody(notes)
     return send_file(ret_midi, attachment_filename='return.mid',
                      mimetype='audio/midi', as_attachment=True)
