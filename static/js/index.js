@@ -56,9 +56,12 @@ function predict() {
     console.log("notes");
     console.log(notes);
     let generatedMelody = melodyGenerator.genMelody(notes);
-    console.log("gen:");
-    console.log(generatedMelody);
-    gridController.setNoteSequence(generatedMelody);
+    setTimeout(function() {
+        console.log("gen:");
+        console.log(generatedMelody);
+        console.log("gen length: " + generatedMelody.length);
+        gridController.setNoteSequence(generatedMelody);
+    }, 1000);
 }
 
 predictButton.addEventListener("click", predict, false);
