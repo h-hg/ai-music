@@ -125,7 +125,7 @@ class Grid{
     playHelper(col) {
         if(this.isPlaying() == false)//判断是否要终止播放
             return;
-        this._cellsMgr.curCol = col;
+        //this._cellsMgr.curCol = col;
         let nextCol = this._cellsMgr.nextCol(col),
             prevCol = this._cellsMgr.prevCol(col);
         //console.log(this.waitTime);
@@ -133,16 +133,28 @@ class Grid{
         //api 
         //let playedCellRow = this._cellsMgr.getClickedRow(this._cellsMgr.curCol);
         //let state = this._cellsMgr.getState(col, playedCellRow);
-        
+        //move the grid
+        if(this._contentWidth > this._viewWidth) {
+            let c1 = (this._cellsMgr.curCol * this._cellWidth) >= (this._offsetX + this._offsetX + this._viewWidth) / 2,//判断当前列是否在canvas中间及其后面
+                c2 = this._offsetX + this._viewWidth < this.contentWidth;//判断当前slider是否还可以向后移动
+            if(c1 && c2) {
+                let ratio = ( this._offsetX + this._cellWidth ) / this._contentWidth;
+                //让滚动条前进
+                this.dispatchOffsetXChangeEvent(ratio);
+                //让网格前进
+                this.setGridOffsetX(ratio);
+            }
+        }
+        console.log("curCol " + this._cellsMgr.curCol + " col " + col + " cols " + this._cellsMgr.cols);
+        if(this._cellsMgr.curCol ==  this._cellsMgr.cols - 1) {
+            console.log("yes");
+            this.setGridOffsetX(0);
+            this.dispatchOffsetXChangeEvent(0);
+        }
+        this._cellsMgr.curCol = col;
         //play sound
         //this.player.playSound(playedCellRow,state);
         this.player.playSound(this._cellsMgr.getNote(col));
-        let c1 = (this._cellsMgr.curCol * this._cellHeight) >= (this._offsetX + this._offsetX + this._viewWidth) / 2,//判断当前列是否在canvas中间及其后面
-            c2 = this._offsetX + this._viewWidth < this.contentWidth;//判断当前slider是否还可以向后移动
-        if(c1 && c2) {
-            //让滚动条前进
-            //让网格前进
-        }
         //减少使用this.redraw()提升速度
         this.drawColCells(prevCol);
         this.drawColCells(col);
@@ -155,10 +167,17 @@ class Grid{
         let event = new Event("stop");
         document.dispatchEvent(event);//其中 grid 是canvas 的id，可能需要改动
     }
+    dispatchOffsetXChangeEvent(ratio) {
+        let event = new CustomEvent("gridOffsetXChange", { "detail":{"ratio": ratio} });
+        //console.log(this.posChangeEventName + " " + ratio)
+        document.dispatchEvent(event);//其中 grid 是canvas 的id，可能需要改动
+    }
     play() {
         if(this.isPlaying())
             return;
         this.dispatchPlayEvent();
+        this.setGridOffsetX(0);
+        this.dispatchOffsetXChangeEvent(0);
         this._cellsMgr.curCol = 0;
         this.playHelper(0);
     }
