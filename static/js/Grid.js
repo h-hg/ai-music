@@ -1,21 +1,21 @@
 class Grid{
     //canvas is canvas element
     constructor(canvas, cols=16, rows=14) {
-        this.canvas = canvas;
-        this.viewWidth = this.canvas.clientWidth;
-        this.viewHeight = this.canvas.clientHeight;
-        this.canvas.setAttribute("height", this.viewHeight);
-        this.canvas.setAttribute("width", this.viewWidth);
+        this._canvas = canvas;
+        this._viewWidth = this._canvas.clientWidth;
+        this._viewHeight = this._canvas.clientHeight;
+        this._canvas.setAttribute("height", this._viewHeight);
+        this._canvas.setAttribute("width", this._viewWidth);
         
-        this.gridOffsetX = 0;
-        this.gridOffsetY = 0;
+        this._offsetX = 0;
+        this._offsetY = 0;
         
         //variable for playing  
         this._waitTime = 1000;
-        this.lineWidth = 1;
+        this._lineWidth = 1;
 
         //variable for color
-        this.ctx = this.canvas.getContext("2d");
+        this._ctx = this._canvas.getContext("2d");
         this.constColor = {
             BACKGROUND:"white",
             LINE:"rgb(196, 233, 251)"
@@ -28,11 +28,11 @@ class Grid{
     }
     //这个函数是为了自动适应例如canvas长度、宽度等数据变化时调用的，
     reset(cols, rows=14) {
-        this.CELL_HEIGHT = this.viewHeight / 14;/*后面在改*/
-        this.CELL_WIDTH =  this.viewWidth / 16;/*后面在改*/
-        this._contentWidth = this.CELL_WIDTH * cols;
-        this._contentHeight = this.CELL_HEIGHT * rows;
-        this.cellsMgr = new CellsMgr(cols, rows);
+        this._cellHeight = this._viewHeight / 14;/*后面在改*/
+        this._cellWidth =  this._viewWidth / 16;/*后面在改*/
+        this._contentWidth = this._cellWidth * cols;
+        this._contentHeight = this._cellHeight * rows;
+        this._cellsMgr = new CellsMgr(cols, rows);
         this.redraw();
     }
     //******************setter and getter*************************
@@ -49,22 +49,22 @@ class Grid{
         return this._waitTime;
     }
 /*     get data() {
-        return this.cellsMgr.data;
+        return this._cellsMgr.data;
     }
     set data(val) {
-        this.cellsMgr.data = val;
+        this._cellsMgr.data = val;
         this.setGridOffsetX(0);
     } */
     
     getNoteSequence() {
-        return this.cellsMgr.getNoteSequence();
+        return this._cellsMgr.getNoteSequence();
     }
     setNoteSequence(noteSequence) {
-        this.cellsMgr.setNoteSequence(noteSequence);
+        this._cellsMgr.setNoteSequence(noteSequence);
         this.setGridOffsetX(0);
     }
     isPlaying() {
-        return this.cellsMgr.curCol != -1;
+        return this._cellsMgr.curCol != -1;
     }
     //return the smallest multiple of n which is greater or equal to x
     getPos(x, n) {
@@ -74,46 +74,46 @@ class Grid{
     }
 
     drawBackground() {
-        this.ctx.beginPath();
-        this.ctx.rect(0, 0, this.viewWidth, this.viewHeight);
-        this.ctx.stroke();
-        this.ctx.fillStyle = this.constColor.BACKGROUND;
-        this.ctx.fill();
+        this._ctx.beginPath();
+        this._ctx.rect(0, 0, this._viewWidth, this._viewHeight);
+        this._ctx.stroke();
+        this._ctx.fillStyle = this.constColor.BACKGROUND;
+        this._ctx.fill();
     }
     drawLines(){
-        this.ctx.strokeStyle = this.constColor.LINE;
-        this.ctx.linewidth = this.lineWidth;
+        this._ctx.strokeStyle = this.constColor.LINE;
+        this._ctx.linewidth = this._lineWidth;
         //draw horizontal line
-        for(let y = this.getPos(this.gridOffsetY, this.CELL_HEIGHT) - this.gridOffsetY; y <= this.viewHeight; y += this.CELL_HEIGHT) {
+        for(let y = this.getPos(this._offsetY, this._cellHeight) - this._offsetY; y <= this._viewHeight; y += this._cellHeight) {
             //console.log("y: " + y);
-            this.ctx.moveTo(0, y);
-            this.ctx.lineTo(this.viewWidth, y);
+            this._ctx.moveTo(0, y);
+            this._ctx.lineTo(this._viewWidth, y);
         }
         //draw vertical line
-        for(let x = this.getPos(this.gridOffsetX, this.CELL_WIDTH) - this.gridOffsetX; x <= this.viewWidth; x += this.CELL_WIDTH) {
+        for(let x = this.getPos(this._offsetX, this._cellWidth) - this._offsetX; x <= this._viewWidth; x += this._cellWidth) {
             //console.log("x: " + x);
-            this.ctx.moveTo(x, 0);
-            this.ctx.lineTo(x, this.viewHeight);
+            this._ctx.moveTo(x, 0);
+            this._ctx.lineTo(x, this._viewHeight);
         }
-        this.ctx.stroke();
+        this._ctx.stroke();
     }
     drawCell(col, row) {
-        let x = Math.ceil(col * this.CELL_WIDTH - this.gridOffsetX + this.lineWidth),
-            y = Math.ceil(row * this.CELL_HEIGHT - this.gridOffsetY + + this.lineWidth),
-            width = Math.floor(this.CELL_WIDTH - 2*this.lineWidth),
-            height = Math.floor(this.CELL_HEIGHT - 2*this.lineWidth);
-        this.ctx.fillStyle = this.cellsMgr.getColor(col, row);
-        this.ctx.fillRect(x, y, width, height);
+        let x = Math.ceil(col * this._cellWidth - this._offsetX + this._lineWidth),
+            y = Math.ceil(row * this._cellHeight - this._offsetY + + this._lineWidth),
+            width = Math.floor(this._cellWidth - 2*this._lineWidth),
+            height = Math.floor(this._cellHeight - 2*this._lineWidth);
+        this._ctx.fillStyle = this._cellsMgr.getColor(col, row);
+        this._ctx.fillRect(x, y, width, height);
     }
     drawAllCells() {
         this.drawBackground();
         this.drawLines();
-        for(let col = Math.floor(this.gridOffsetX / this.CELL_WIDTH), n = Math.floor((this.gridOffsetX + this.viewWidth) / this.CELL_WIDTH); col <= n && col < this.cellsMgr.cols; ++col) {
+        for(let col = Math.floor(this._offsetX / this._cellWidth), n = Math.floor((this._offsetX + this._viewWidth) / this._cellWidth); col <= n && col < this._cellsMgr.cols; ++col) {
             this.drawColCells(col);
         }
     }
     drawColCells(col) {
-        for(let row = Math.floor(this.gridOffsetY / this.CELL_HEIGHT), m = Math.floor((this.gridOffsetY + this.viewHeight)/this.CELL_HEIGHT); row <= m && row < this.cellsMgr.rows; ++row) {
+        for(let row = Math.floor(this._offsetY / this._cellHeight), m = Math.floor((this._offsetY + this._viewHeight)/this._cellHeight); row <= m && row < this._cellsMgr.rows; ++row) {
             this.drawCell(col,row);
         }
     }
@@ -125,20 +125,20 @@ class Grid{
     playHelper(col) {
         if(this.isPlaying() == false)//判断是否要终止播放
             return;
-        this.cellsMgr.curCol = col;
-        let nextCol = this.cellsMgr.nextCol(col),
-            prevCol = this.cellsMgr.prevCol(col);
+        this._cellsMgr.curCol = col;
+        let nextCol = this._cellsMgr.nextCol(col),
+            prevCol = this._cellsMgr.prevCol(col);
         //console.log(this.waitTime);
         setTimeout(this.playHelper.bind(this, nextCol), this.waitTime);
         //api 
-        //let playedCellRow = this.cellsMgr.getClickedRow(this.cellsMgr.curCol);
-        //let state = this.cellsMgr.getState(col, playedCellRow);
+        //let playedCellRow = this._cellsMgr.getClickedRow(this._cellsMgr.curCol);
+        //let state = this._cellsMgr.getState(col, playedCellRow);
         
         //play sound
         //this.player.playSound(playedCellRow,state);
-        this.player.playSound(this.cellsMgr.getNote(col));
-        let c1 = (this.cellsMgr.curCol * this.CELL_HEIGHT) >= (this.gridOffsetX + this.gridOffsetX + this.viewWidth) / 2,//判断当前列是否在canvas中间及其后面
-            c2 = this.gridOffsetX + this.viewWidth < this.contentWidth;//判断当前slider是否还可以向后移动
+        this.player.playSound(this._cellsMgr.getNote(col));
+        let c1 = (this._cellsMgr.curCol * this._cellHeight) >= (this._offsetX + this._offsetX + this._viewWidth) / 2,//判断当前列是否在canvas中间及其后面
+            c2 = this._offsetX + this._viewWidth < this.contentWidth;//判断当前slider是否还可以向后移动
         if(c1 && c2) {
             //让滚动条前进
             //让网格前进
@@ -159,33 +159,33 @@ class Grid{
         if(this.isPlaying())
             return;
         this.dispatchPlayEvent();
-        this.cellsMgr.curCol = 0;
+        this._cellsMgr.curCol = 0;
         this.playHelper(0);
     }
     stop() {
         this.dispatchStopEvent();
-        this.cellsMgr.curCol = -1;
+        this._cellsMgr.curCol = -1;
         this.redraw();
     }
 
     setGridOffsetX(ratio) {
-        this.gridOffsetX = ratio * this.contentWidth;
+        this._offsetX = ratio * this.contentWidth;
         this.redraw();
     }
     setGridOffsetY(ratio) {
-        this.gridOffsetY = ratio * this.contentHeight;
+        this._offsetY = ratio * this.contentHeight;
         this.redraw();
     }
 
     clickHandler(e) {
-        let col = Math.floor((this.gridOffsetX + e.offsetX) / this.CELL_WIDTH ),
-            row = Math.floor((this.gridOffsetY + e.offsetY) / this.CELL_HEIGHT);
+        let col = Math.floor((this._offsetX + e.offsetX) / this._cellWidth ),
+            row = Math.floor((this._offsetY + e.offsetY) / this._cellHeight);
         //console.log(col + ", " + row);
         if(e.which == 1) /*mouse left*/{
             //获取当前被点击列之前被点击的行号
-            let lastRow = this.cellsMgr.getClickedRow(col);
+            let lastRow = this._cellsMgr.getClickedRow(col);
             //console.log("lastRow: " + lastRow);
-            this.cellsMgr.addClick(col, row);
+            this._cellsMgr.addClick(col, row);
             this.drawCell(col, row);
             //判断是否要重新绘制之前的行号
             if(lastRow != -1 && lastRow != row) {
@@ -194,6 +194,6 @@ class Grid{
         }
     }
     addListener() {
-        this.canvas.addEventListener("click", this.clickHandler.bind(this), false);
+        this._canvas.addEventListener("click", this.clickHandler.bind(this), false);
     }
 }
