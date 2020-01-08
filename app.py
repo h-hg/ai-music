@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_file, request, session, jsonify, redirect
+from flask import Flask, render_template, send_file, request, session, jsonify, redirect, Response
 from flask_sqlalchemy import SQLAlchemy
 import json
 from generate import generate_melody
@@ -74,14 +74,18 @@ def getdata(id):
     return music.body
 
 
-@app.route('/music/save', methods=['POST',])
+@app.route('/music/save', methods=['POST', ])
 def save():
     mjson = json.loads(request.get_data(as_text=True))
     music = Music(userId=mjson["userId"], musicName=mjson["musicName"],
                   createTime=datetime.datetime.now(), body=mjson["body"])
-    db.session.add(music)
-    db.session.commit()
-    return True
+    try:
+        db.session.add(music)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': e, 'echo_msg': '保存失败'}), 500, {"ContentType":"application/json"}
+    return jsonify({'echo_msg': '保存成功'}), 201, {"ContentType":"application/json"}
 
 
 if __name__ == '__main__':
