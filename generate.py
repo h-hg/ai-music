@@ -77,7 +77,7 @@ def generate_melody(input_list):
                      if input_ns.notes else 0)
     # length of generated piece
     input_length = len(input_list)
-    total_seconds = input_length * 0.5 * 6 - last_end_time
+    total_seconds = input_length * 0.5 * 3 - last_end_time
 
     # options
     generator_options = generator_pb2.GeneratorOptions()

@@ -61,6 +61,7 @@ class Grid{
     }
     setNoteSequence(noteSequence) {
         this.cellsMgr.setNoteSequence(noteSequence);
+        //this.reset(this.cellsMgr.cols);
         this.setGridOffsetX(0);
     }
     isPlaying() {

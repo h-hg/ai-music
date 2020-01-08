@@ -2,11 +2,11 @@ from flask import Flask, render_template, send_file, request, session, jsonify, 
 from flask_sqlalchemy import SQLAlchemy
 import json
 from generate import generate_melody
-from time import datetime
+import datetime
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@127.0.0.1:3306/aimusic'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@110.43.50.22:3306/aimusic'
 # 每次请求结束后都会自动提交数据库中的变动
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 # 实例化
@@ -23,7 +23,7 @@ class User(db.Model):
     avatar = db.Column(db.LargeBinary)
 
 
-class Music(db.Modle):
+class Music(db.Model):
     __tablename__ = 'music'
     musicId = db.Column(db.Integer, primary_key=True,
                         nullable=False, autoincrement=True)
@@ -74,11 +74,11 @@ def getdata(id):
     return music.body
 
 
-@app.remote('/music/save', methods='POST')
+@app.route('/music/save', methods=['POST',])
 def save():
-    mjson = json.loads(request)
-    music = Music(userId=mjson.userId, musicName=mjson.musicName,
-                  createtime=datetime.datetime(),body=mjson.body)
+    mjson = json.loads(request.get_data(as_text=True))
+    music = Music(userId=mjson["userId"], musicName=mjson["musicName"],
+                  createTime=datetime.datetime.now(), body=mjson["body"])
     db.session.add(music)
     db.session.commit()
     return True
