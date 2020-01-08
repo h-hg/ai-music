@@ -19,14 +19,14 @@ let gridScrollBarH = new ScrollBarH(
     document.getElementById("track-h").offsetWidth,
     document.getElementById("grid").width,
     gridController.contentWidth,
-    "gridOffsetXChange"
+    "scrollBarHChange"
 );
 let gridScrollBarV = new ScrollBarV(
     document.getElementById("slider-v"),
     document.getElementById("track-v").offsetHeight,
     document.getElementById("grid").height,
     gridController.contentHeight,
-    "gridOffsetYChange"
+    "scrollBarVChange"
 );
 
 let melodyGenerator = new Gen();
@@ -46,11 +46,11 @@ function predict() {
 predictButton.addEventListener("click", predict, false);
 
 
-document.addEventListener("gridOffsetXChange", function(e) {
+document.addEventListener("scrollBarHChange", function(e) {
     if(gridController.isPlaying() == false)
         gridController.setGridOffsetX(e.detail.ratio);
 }, false);
-document.addEventListener("gridOffsetYChange", function(e) {
+document.addEventListener("scrollBarVChange", function(e) {
     if(gridController.isPlaying() == false)
         gridController.setGridOffsetY(e.detail.ratio);
 }, false);
@@ -64,7 +64,9 @@ document.addEventListener("stop", function(e) {
     gridScrollBarV.enableMove();
     predictButton.addEventListener("click", predict, false);
 },false);
-
+document.addEventListener("gridOffsetXChange", function(e) {
+    gridScrollBarH.setSliderPos(e.detail.ratio);
+}, false);
 
 //test
 
