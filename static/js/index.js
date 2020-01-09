@@ -67,6 +67,10 @@ document.addEventListener("stop", function(e) {
 document.addEventListener("gridOffsetXChange", function(e) {
     gridScrollBarH.setSliderPos(e.detail.ratio);
 }, false);
-
+window.onresize = function() {
+    gridScrollBarH.adaptSize(document.getElementById("track-h").offsetWidth);
+    gridScrollBarV.adaptSize(document.getElementById("track-v").offsetHeight);
+    gridController.adaptSize();
+};
 //test
 
