@@ -79,9 +79,40 @@ class Grid{
     getNoteSequence() {
         return this._cellsMgr.getNoteSequence();
     }
-    setNoteSequence(noteSequence) {
+    setNoteSequence_old(noteSequence) {
         this._cellsMgr.setNoteSequence(noteSequence);
         this.setGridOffsetX(0);
+    }
+    setNoteSequence(noteSeq) {
+        for(let i = noteSeq.length; i < 16; ++i) {
+            noteSeq.push("Rest");
+        }
+        this._cellsMgr.setNoteSequence(noteSeq);
+        //this.setGridOffsetX(0);
+        
+        //this._viewWidth = this._canvas.clientWidth;
+        //this._viewHeight = this._canvas.clientHeight;
+        //this._canvas.setAttribute("height", this._viewHeight);
+        //this._canvas.setAttribute("width", this._viewWidth);
+
+        let offsetRatioX = this._offsetX / this._contentWidth,/*第一次时候，这个为undefine*/
+            offsetRatioY = this._offsetY / this._contentHeight;/*第一次时候，这个为undefine*/
+        
+        this._cellHeight = this._viewHeight / 14;/*后面在改*/
+        this._cellWidth =  this._viewWidth / 16;/*后面在改*/
+        
+        this._contentWidth = this._cellWidth * this._cellsMgr.cols;
+        this._contentHeight = this._cellHeight * this._cellsMgr.rows;
+
+        this._offsetX = this._offsetX == 0 ? 0 : this._contentWidth * offsetRatioX;/*判断是否为零，是为了构造函数中this._contentWidth没有定义*/
+        this._offsetY = this._offsetY == 0 ? 0 : this._contentHeight * offsetRatioY;
+        
+        this.dispatchRatioXChangeEvent();
+        this.redraw();
+    }
+    dispatchRatioXChangeEvent() {
+        let event = new CustomEvent("gridRatioXChange", { "detail":{"ratio": this._viewWidth / this._contentWidth} });
+        document.dispatchEvent(event);//其中 grid 是canvas 的id，可能需要改动        
     }
     isPlaying() {
         return this._cellsMgr.curCol != -1;

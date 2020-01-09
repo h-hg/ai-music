@@ -72,5 +72,8 @@ window.onresize = function() {
     gridScrollBarV.adaptSize(document.getElementById("track-v").offsetHeight);
     gridController.adaptSize();
 };
+document.addEventListener("gridRatioXChange", function(e){
+    gridScrollBarH.reset(e.detail.ratio);
+}, false);
 //test
 
