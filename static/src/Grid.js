@@ -14,7 +14,7 @@ class Grid {
         this._offsetY = 0;
 
         //variable for playing  
-        this._waitTime = 1000;
+        this._waitTime = 500;
         this._lineWidth = 1;
 
         //variable for color
