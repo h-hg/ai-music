@@ -1,6 +1,6 @@
-import { Grid } from './Grid'
-import { Gen } from './Gen'
-import { ScrollBarV, ScrollBarH } from './ScrollBar'
+import { Grid } from './Grid';
+import { Gen } from './Gen';
+import { ScrollBarV, ScrollBarH } from './ScrollBar';
 
 let grid = document.getElementById("grid");
 let gridController = new Grid(grid, 28);

@@ -1,4 +1,4 @@
-import Tone from 'tone'
+import Tone from 'tone';
 
 class Player {
     constructor() {

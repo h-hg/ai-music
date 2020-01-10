@@ -1,5 +1,5 @@
-import { CellsMgr } from './CellMgr'
-import { Player } from './Player'
+import { CellsMgr } from './CellMgr';
+import { Player } from './Player';
 
 class Grid {
     //canvas is canvas element

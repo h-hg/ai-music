@@ -1,4 +1,4 @@
-import Midi from '@tonejs/midi'
+import { Midi } from '@tonejs/midi';
 
 class Gen {
 
