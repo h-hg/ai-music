@@ -57,6 +57,8 @@ class ScrollBar {
 
     //用于scrollHeight（或者说visableLength/ Height改变的时候）改变
     reset(ratio, trackLength=this.trackLength) {
+        if(ratio == 1)
+            this.sliderPos = 0;
         this.ratio = ratio;
         this.trackLength = trackLength;
         this.adaptSize(trackLength);  

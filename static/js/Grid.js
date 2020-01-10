@@ -86,7 +86,9 @@ class Grid{
     setNoteSequence(noteSeq) {
         for(let i = noteSeq.length; i < 16; ++i) {
             noteSeq.push("Rest");
+            //进入for的说明是下面的滚动条是百分百，但是滚动条位置是按比例缩放，如果位置本身不是0的话，会造成溢出，应该在滚动条那边修改（判断）一下
         }
+        
         this._cellsMgr.setNoteSequence(noteSeq);
         //this.setGridOffsetX(0);
         
