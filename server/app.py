@@ -3,8 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 from generate import generate_melody
 import datetime
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='',
+            static_folder=os.path.abspath('../static'),
+            template_folder=os.path.abspath('../static'))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@110.43.50.22:3306/aimusic'
 # 每次请求结束后都会自动提交数据库中的变动
@@ -84,8 +87,8 @@ def save():
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': e, 'echo_msg': '保存失败'}), 500, {"ContentType":"application/json"}
-    return jsonify({'echo_msg': '保存成功'}), 201, {"ContentType":"application/json"}
+        return jsonify({'error': e, 'echo_msg': '保存失败'}), 500, {"ContentType": "application/json"}
+    return jsonify({'echo_msg': '保存成功'}), 201, {"ContentType": "application/json"}
 
 
 if __name__ == '__main__':

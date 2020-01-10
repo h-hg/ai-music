@@ -11,22 +11,22 @@ class ScrollBar {
         //this.slider.style[this.sliderPosName] = 0;
         this.slider.style[this.sliderPosName] = this.sliderPos;
 
-        this.reset(ratio,trackLength);
+        this.reset(ratio, trackLength);
 
-        this.mousedownHandler = function(e) {
+        this.mousedownHandler = function (e) {
             console.log("e");
             console.log(e);
             let initPos = this.getSliderPos(),
                 firstPos = e[this.eventPos];//鼠标按下时的坐标
-            document.onmousemove = function(ev) {
+            document.onmousemove = function (ev) {
                 //console.log("ev");
                 //console.log(ev);
                 let delta = ev[this.eventPos] - firstPos;//应该是鼠标按着拖动，一旦有鼠标变化，便产生事件获得得到的坐标
                 this.sliderPos = initPos + delta;
                 //console.log("delta: " + delta + " sliderPos: " + sliderPos);
-                if(this.sliderPos < 0) {
+                if (this.sliderPos < 0) {
                     this.sliderPos = 0;
-                } else if(this.sliderPos > this.trackLength - this.sliderLength) {
+                } else if (this.sliderPos > this.trackLength - this.sliderLength) {
                     this.sliderPos = this.trackLength - this.sliderLength;
                     //console.log("trackLength " + this.trackLength + " sliderLength " + this.sliderLength + " sliderPos " + this.sliderPos);
                 }
@@ -35,7 +35,7 @@ class ScrollBar {
                 this.setSliderPos(ratio);
                 this.dispatchPosChangeEvent(ratio);
             }.bind(this);
-            document.onmouseup = function(ev) {
+            document.onmouseup = function (ev) {
                 document.onmousemove = null;
             }
         }.bind(this);
@@ -56,10 +56,10 @@ class ScrollBar {
     }
 
     //用于scrollHeight（或者说visableLength/ Height改变的时候）改变
-    reset(ratio, trackLength=this.trackLength) {
+    reset(ratio, trackLength = this.trackLength) {
         this.ratio = ratio;
         this.trackLength = trackLength;
-        this.adaptSize(trackLength);  
+        this.adaptSize(trackLength);
     }
 
     setSliderPos(ratio) {
@@ -71,7 +71,7 @@ class ScrollBar {
         //return parseInt(this.slider.style[this.sliderPosName]);
     }
     dispatchPosChangeEvent(ratio) {
-        let event = new CustomEvent(this.posChangeEventName, { "detail":{"ratio": ratio} });
+        let event = new CustomEvent(this.posChangeEventName, { "detail": { "ratio": ratio } });
         //console.log(this.posChangeEventName + " " + ratio)
         document.dispatchEvent(event);//其中 grid 是canvas 的id，可能需要改动
     }
@@ -87,7 +87,7 @@ class ScrollBar {
 class ScrollBarH extends ScrollBar {
     constructor(slider, trackLength, visableLength, scrollLenght, posChangeEventName) {
         super(slider, trackLength, visableLength / scrollLenght,
-              {"posChangeEventName": posChangeEventName, "lengthName": "width", "sliderPosName": "left", "eventPos":"clientX"}
+            { "posChangeEventName": posChangeEventName, "lengthName": "width", "sliderPosName": "left", "eventPos": "clientX" }
         );
     }
 }
@@ -95,7 +95,9 @@ class ScrollBarH extends ScrollBar {
 class ScrollBarV extends ScrollBar {
     constructor(slider, trackLength, visabelLength, scrollLength, posChangeEventName) {
         super(slider, trackLength, visabelLength / scrollLength,
-              {"posChangeEventName": posChangeEventName, "lengthName": "height", "sliderPosName": "top", "eventPos":"clientY"}
+            { "posChangeEventName": posChangeEventName, "lengthName": "height", "sliderPosName": "top", "eventPos": "clientY" }
         );
     }
 }
+
+export { ScrollBar, ScrollBarH, ScrollBarV };

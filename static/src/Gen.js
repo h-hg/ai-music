@@ -1,3 +1,5 @@
+import Midi from '@tonejs/midi'
+
 class Gen {
 
     constructor() { }
@@ -27,3 +29,5 @@ class Gen {
         return generatedNotes;
     }
 }
+
+export { Gen };

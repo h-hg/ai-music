@@ -24,20 +24,20 @@ class CellsMgr {
         ];
         this.note2index = {
             "Rest": -1,
-            'B4':0,
-            'A4':1, 'A#4':1,
-            'G4':2, 'G#4':2,
-            'F4':3, 'F#4':3,
-            'E4':4,
-            'D4':5, 'D#4':5,
-            'C4':6, 'C#4':6,
-            'B3':7,
-            'A3':8, 'A#3':8,
-            'G3':9, 'G#3':9,
-            'F3':10, 'F#3':10,
-            'E3':11,
-            'D3':12, 'D#3':12,
-            'C3':13, 'C#3':13
+            'B4': 0,
+            'A4': 1, 'A#4': 1,
+            'G4': 2, 'G#4': 2,
+            'F4': 3, 'F#4': 3,
+            'E4': 4,
+            'D4': 5, 'D#4': 5,
+            'C4': 6, 'C#4': 6,
+            'B3': 7,
+            'A3': 8, 'A#3': 8,
+            'G3': 9, 'G#3': 9,
+            'F3': 10, 'F#3': 10,
+            'E3': 11,
+            'D3': 12, 'D#3': 12,
+            'C3': 13, 'C#3': 13
         };
     }
     initColors() {
@@ -109,20 +109,20 @@ class CellsMgr {
     prevCol(col) {
         return (col - 1 + this._cols) % this._cols;
     }
-/*     get data() {
-        return {
-            "cols": this._cols,
-            "rows": this._rows,
-            "rowClicked": this._rowClicked,
-            "colStates": this._colStates
-        };
-    }
-    set data(val) {
-        this._cols = val.cols;
-        this._rows = val.rows;
-        this._rowClicked = val.rowClicked;
-        this._colStates = val.colStates;
-    } */
+    /*     get data() {
+            return {
+                "cols": this._cols,
+                "rows": this._rows,
+                "rowClicked": this._rowClicked,
+                "colStates": this._colStates
+            };
+        }
+        set data(val) {
+            this._cols = val.cols;
+            this._rows = val.rows;
+            this._rowClicked = val.rowClicked;
+            this._colStates = val.colStates;
+        } */
     get curCol() {
         return this._curCol;
     }
@@ -175,7 +175,7 @@ class CellsMgr {
     setNoteSequence(noteSequence) {
         this.reset(noteSequence.length);
         for (let i = 0; i < noteSequence.length; ++i) {
-            if(noteSequence[i] == "Rest") {
+            if (noteSequence[i] == "Rest") {
                 continue;
             }
             this._rowClicked[i] = this.note2index[noteSequence[i]];
@@ -183,3 +183,5 @@ class CellsMgr {
         }
     }
 }
+
+export { CellsMgr };

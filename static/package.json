@@ -1,0 +1,16 @@
+{
+  "name": "ai-music",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tonejs/midi": "^2.0.15",
+    "tone": "^13.8.25",
+    "webpack": "^4.41.5"
+  }
+}

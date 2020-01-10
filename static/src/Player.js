@@ -1,3 +1,5 @@
+import Tone from 'tone'
+
 class Player {
     constructor() {
         this.synth = new Tone.PolySynth(3, Tone.SimpleSynth).set({
@@ -15,12 +17,14 @@ class Player {
         this.synth.stealVoices = false;
     }
 
-    playSound(note, duration=0.4){
-        if(note == "Rest") {
+    playSound(note, duration = 0.4) {
+        if (note == "Rest") {
             return;
         }
-        this.synth.triggerAttackRelease(note,0.4);
+        this.synth.triggerAttackRelease(note, 0.4);
     }
 
 
 }
+
+export { Player };
