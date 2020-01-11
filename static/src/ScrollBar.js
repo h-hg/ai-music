@@ -1,103 +1,97 @@
 class ScrollBar {
-    constructor(slider, trackLength, ratio, kwargs) {
-        this.slider = slider;
-        this.lengthName = kwargs.lengthName;
-        this.sliderPosName = kwargs.sliderPosName;
-        this.eventPos = kwargs.eventPos;
-        this.posChangeEventName = kwargs.posChangeEventName;
+    constructor(slider, trackL, sliderRatio, kwargs) {
+        this._slider = slider;
+        this._lengthName = kwargs.lengthName;
+        this._sliderPosName = kwargs.sliderPosName;
+        this._eventPos = kwargs.eventPos;
+        this._posChEventName = kwargs.posChEventName;
 
-        this.sliderPos = 0;//引入这个是为了避免设置css后，从css读取造成精度误差
-        this.slider.style.position = "absolute";
-        //this.slider.style[this.sliderPosName] = 0;
-        this.slider.style[this.sliderPosName] = this.sliderPos;
+        this._sliderPos = 0;//Why not read from css directly: Avoiding loss of accuracy, for reading from css can only be accurate to 2 decimal places
+        this._slider.style.position = "absolute";
+        this._slider.style[this._sliderPosName] = this._sliderPos;
 
-        this.reset(ratio, trackLength);
+        this._trackL = trackL;
+        this.reset(0,sliderRatio);
 
-        this.mousedownHandler = function (e) {
-            console.log("e");
-            console.log(e);
-            let initPos = this.getSliderPos(),
-                firstPos = e[this.eventPos];//鼠标按下时的坐标
-            document.onmousemove = function (ev) {
-                //console.log("ev");
-                //console.log(ev);
-                let delta = ev[this.eventPos] - firstPos;//应该是鼠标按着拖动，一旦有鼠标变化，便产生事件获得得到的坐标
-                this.sliderPos = initPos + delta;
-                //console.log("delta: " + delta + " sliderPos: " + sliderPos);
-                if (this.sliderPos < 0) {
-                    this.sliderPos = 0;
-                } else if (this.sliderPos > this.trackLength - this.sliderLength) {
-                    this.sliderPos = this.trackLength - this.sliderLength;
-                    //console.log("trackLength " + this.trackLength + " sliderLength " + this.sliderLength + " sliderPos " + this.sliderPos);
+        this.mousedownHandler = function(e) {
+
+            let initPos = this._sliderPos,
+                firstPos = e[this._eventPos];//firstPos is the position of mouse when the mouse is clicked
+            //console.log("initPos: " + initPos);
+            document.onmousemove = function(ev) {
+
+                let delta = ev[this._eventPos] - firstPos;//ev[this._eventPos] is the position of mouse when it is moving
+                this._sliderPos = initPos + delta;
+
+                if(this._sliderPos < 0) {
+                    this._sliderPos = 0;
+                } else if(this._sliderPos > this._trackL - this._sliderL) {
+                    this._sliderPos = this._trackL - this._sliderL;
+                    //console.log("trackL " + this._trackL + " sliderLength " + this._sliderL + " sliderPos " + this._sliderPos);//testing for bug 2
                 }
-                //console.log("sliderPos: " + sliderPos);
-                let ratio = this.sliderPos / this.trackLength;
+                let ratio = this._sliderPos / this._trackL;
                 this.setSliderPos(ratio);
-                this.dispatchPosChangeEvent(ratio);
+                this._emitPosChEvent(ratio);
             }.bind(this);
-            document.onmouseup = function (ev) {
+            document.onmouseup = function(ev) {
                 document.onmousemove = null;
             }
         }.bind(this);
 
         this.enableMove();
-        console.log("slider-h");
-        console.log(this);
     }
 
-    //用trackLength改变的时候，自适应
-    adaptSize(trackLength) {
-        let posRatio = this.getSliderPos() / this.trackLength;
-        //console.log("pos: " + this.getSliderPos() + " PosRatio: " + posRatio + " old_trackL: " + this.trackLength + " new_trackL " + trackLength);
-        this.trackLength = trackLength;
-        this.sliderLength = this.ratio * this.trackLength;
-        this.slider.style[this.lengthName] = this.sliderLength + "px";
-        this.setSliderPos(posRatio);
+    resizeHelper(trackL) {
+        let posRatio = this._sliderPos / this._trackL;//We try to keep the the ratio of slider postion the same
+        this._trackL = trackL;
+        this._sliderL = this._sliderRatio * this._trackL;
+        this._slider.style[this._lengthName] = this._sliderL + "px";
+        this.setSliderPos(posRatio);        
     }
 
-    //用于scrollHeight（或者说visableLength/ Height改变的时候）改变
-    reset(ratio, trackLength = this.trackLength) {
-        this.ratio = ratio;
-        this.trackLength = trackLength;
-        this.adaptSize(trackLength);
+    //This function is used when ( visibleL / scrollL ) is changed, in other word, the length of slider has to be changed
+    reset(posRatio, sliderRatio) {
+        this._sliderRatio = sliderRatio;
+        this._sliderPos = this._trackL * posRatio;
+        this.resizeHelper(this._trackL);
     }
-
-    setSliderPos(ratio) {
-        this.sliderPos = ratio * this.trackLength;
-        this.slider.style[this.sliderPosName] = this.sliderPos + "px";
+    setSliderPos(posRatio) {
+        this._sliderPos = posRatio * this._trackL;
+        this._slider.style[this._sliderPosName] = this._sliderPos + "px";
     }
-    getSliderPos() {
-        return this.sliderPos;
-        //return parseInt(this.slider.style[this.sliderPosName]);
-    }
-    dispatchPosChangeEvent(ratio) {
-        let event = new CustomEvent(this.posChangeEventName, { "detail": { "ratio": ratio } });
-        //console.log(this.posChangeEventName + " " + ratio)
-        document.dispatchEvent(event);//其中 grid 是canvas 的id，可能需要改动
+    _emitPosChEvent(posRatio) {
+        let event = new CustomEvent(this._posChEventName, { "detail":{"ratio": posRatio} });
+        document.dispatchEvent(event);
     }
     enableMove() {
-        this.slider.addEventListener("mousedown", this.mousedownHandler, false);
+        this._slider.addEventListener("mousedown", this.mousedownHandler, false);
     }
     disableMove() {
-        this.slider.removeEventListener("mousedown", this.mousedownHandler, false);
-        console.log("remove");
+        this._slider.removeEventListener("mousedown", this.mousedownHandler, false);
     }
 }
 
 class ScrollBarH extends ScrollBar {
-    constructor(slider, trackLength, visableLength, scrollLenght, posChangeEventName) {
-        super(slider, trackLength, visableLength / scrollLenght,
-            { "posChangeEventName": posChangeEventName, "lengthName": "width", "sliderPosName": "left", "eventPos": "clientX" }
+    constructor(slider, track, visableL, scrollL, posChEventName) {
+        super(slider, track.offsetWidth, visableL / scrollL,
+              {"posChEventName": posChEventName, "lengthName": "width", "sliderPosName": "left", "eventPos":"clientX"}
         );
+        this._track = track;
+    }
+    resize() {
+        console.log("scrollbarh resize: "  + this._track.offsetWidth);
+        super.resizeHelper(this._track.offsetWidth)
     }
 }
 
 class ScrollBarV extends ScrollBar {
-    constructor(slider, trackLength, visabelLength, scrollLength, posChangeEventName) {
-        super(slider, trackLength, visabelLength / scrollLength,
-            { "posChangeEventName": posChangeEventName, "lengthName": "height", "sliderPosName": "top", "eventPos": "clientY" }
+    constructor(slider, track, visableL, scrollL, posChEventName) {
+        super(slider, track.offsetHeight, visableL / scrollL,
+              {"posChEventName": posChEventName, "lengthName": "height", "sliderPosName": "top", "eventPos":"clientY"}
         );
+        this._track = track;
+    }
+    resize() {
+        super.resizeHelper(this._track.offsetHeight);
     }
 }
-
-export { ScrollBar, ScrollBarH, ScrollBarV };
