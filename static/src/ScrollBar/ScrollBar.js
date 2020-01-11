@@ -11,21 +11,21 @@ class ScrollBar {
         this._slider.style[this._sliderPosName] = this._sliderPos;
 
         this._trackL = trackL;
-        this.reset(0,sliderRatio);
+        this.reset(0, sliderRatio);
 
-        this.mousedownHandler = function(e) {
+        this.mousedownHandler = function (e) {
 
             let initPos = this._sliderPos,
                 firstPos = e[this._eventPos];//firstPos is the position of mouse when the mouse is clicked
             //console.log("initPos: " + initPos);
-            document.onmousemove = function(ev) {
+            document.onmousemove = function (ev) {
 
                 let delta = ev[this._eventPos] - firstPos;//ev[this._eventPos] is the position of mouse when it is moving
                 this._sliderPos = initPos + delta;
 
-                if(this._sliderPos < 0) {
+                if (this._sliderPos < 0) {
                     this._sliderPos = 0;
-                } else if(this._sliderPos > this._trackL - this._sliderL) {
+                } else if (this._sliderPos > this._trackL - this._sliderL) {
                     this._sliderPos = this._trackL - this._sliderL;
                     //console.log("trackL " + this._trackL + " sliderLength " + this._sliderL + " sliderPos " + this._sliderPos);//testing for bug 2
                 }
@@ -33,7 +33,7 @@ class ScrollBar {
                 this.setSliderPos(ratio);
                 this._emitPosChEvent(ratio);
             }.bind(this);
-            document.onmouseup = function(ev) {
+            document.onmouseup = function (ev) {
                 document.onmousemove = null;
             }
         }.bind(this);
@@ -46,7 +46,7 @@ class ScrollBar {
         this._trackL = trackL;
         this._sliderL = this._sliderRatio * this._trackL;
         this._slider.style[this._lengthName] = this._sliderL + "px";
-        this.setSliderPos(posRatio);        
+        this.setSliderPos(posRatio);
     }
 
     //This function is used when ( visibleL / scrollL ) is changed, in other word, the length of slider has to be changed
@@ -60,7 +60,7 @@ class ScrollBar {
         this._slider.style[this._sliderPosName] = this._sliderPos + "px";
     }
     _emitPosChEvent(posRatio) {
-        let event = new CustomEvent(this._posChEventName, { "detail":{"ratio": posRatio} });
+        let event = new CustomEvent(this._posChEventName, { "detail": { "ratio": posRatio } });
         document.dispatchEvent(event);
     }
     enableMove() {
@@ -74,12 +74,12 @@ class ScrollBar {
 class ScrollBarH extends ScrollBar {
     constructor(slider, track, visableL, scrollL, posChEventName) {
         super(slider, track.offsetWidth, visableL / scrollL,
-              {"posChEventName": posChEventName, "lengthName": "width", "sliderPosName": "left", "eventPos":"clientX"}
+            { "posChEventName": posChEventName, "lengthName": "width", "sliderPosName": "left", "eventPos": "clientX" }
         );
         this._track = track;
     }
     resize() {
-        console.log("scrollbarh resize: "  + this._track.offsetWidth);
+        console.log("scrollbarh resize: " + this._track.offsetWidth);
         super.resizeHelper(this._track.offsetWidth)
     }
 }
@@ -87,7 +87,7 @@ class ScrollBarH extends ScrollBar {
 class ScrollBarV extends ScrollBar {
     constructor(slider, track, visableL, scrollL, posChEventName) {
         super(slider, track.offsetHeight, visableL / scrollL,
-              {"posChEventName": posChEventName, "lengthName": "height", "sliderPosName": "top", "eventPos":"clientY"}
+            { "posChEventName": posChEventName, "lengthName": "height", "sliderPosName": "top", "eventPos": "clientY" }
         );
         this._track = track;
     }
@@ -95,3 +95,5 @@ class ScrollBarV extends ScrollBar {
         super.resizeHelper(this._track.offsetHeight);
     }
 }
+
+export { ScrollBarH, ScrollBarV };

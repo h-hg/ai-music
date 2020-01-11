@@ -1,6 +1,6 @@
 //class Config store the data shared by components associate with grid, such as Colors, Controller and Painter.
 class Config {
-    constructor(){
+    constructor() {
         this._cols = 16; //number of column
         this._rows = 14; //number of row
         this._lineW = 1; //line width, it is also the cell padding
@@ -20,55 +20,55 @@ class Config {
         return this._rows;
     }
     set rows(val) {
-    	this._rows = val;
+        this._rows = val;
     }
     get cols() {
         return this._cols;
     }
     set cols(val) {
-    	this._cols = val;
+        this._cols = val;
     }
     get cellPadding() {
-    	return this._lineW;
+        return this._lineW;
     }
     get lineW() {
-    	return this._lineW;
+        return this._lineW;
     }
     get cellW() {
-    	return this._cellW;
+        return this._cellW;
     }
     set cellW(val) {
-    	this._cellW = val;
+        this._cellW = val;
     }
     get cellH() {
-    	return this._cellH;
+        return this._cellH;
     }
     set cellH(val) {
-    	this._cellH = val;
+        this._cellH = val;
     }
     get offsetX() {
-    	return this._offsetX;
+        return this._offsetX;
     }
     set offsetX(val) {
-    	this._offsetX = val;
+        this._offsetX = val;
     }
     get offsetY() {
-    	return this._offsetY;
+        return this._offsetY;
     }
     set offsetY(val) {
-    	this._offsetY = val;
+        this._offsetY = val;
     }
     get visibleW() {
-    	return this._visibleW;
+        return this._visibleW;
     }
     set visibleW(val) {
-    	this._visibleW = val;
+        this._visibleW = val;
     }
     get visibleH() {
-    	return this._visibleH;
+        return this._visibleH;
     }
     set visibleH(val) {
-    	this._visibleH = val;
+        this._visibleH = val;
     }
     get activeCol() {
         return this._activeCol;
@@ -89,15 +89,17 @@ class Config {
         this._scrollW = val;
     }
     get coln() {
-    	return this._coln;
+        return this._coln;
     }
     set coln(val) {
-    	this._coln = val;
+        this._coln = val;
     }
     get rown() {
-    	return this._rown;
+        return this._rown;
     }
     set rown(val) {
-    	this._rown = val;
+        this._rown = val;
     }
 }
+
+export { Config };

@@ -22,20 +22,20 @@ class Rule {
             ['Rest', 'C3', 'C#3']
         ];
         this._note2idx = {
-            'B4':0,
-            'A4':1, 'A#4':1,
-            'G4':2, 'G#4':2,
-            'F4':3, 'F#4':3,
-            'E4':4,
-            'D4':5, 'D#4':5,
-            'C4':6, 'C#4':6,
-            'B3':7,
-            'A3':8, 'A#3':8,
-            'G3':9, 'G#3':9,
-            'F3':10, 'F#3':10,
-            'E3':11,
-            'D3':12, 'D#3':12,
-            'C3':13, 'C#3':13,
+            'B4': 0,
+            'A4': 1, 'A#4': 1,
+            'G4': 2, 'G#4': 2,
+            'F4': 3, 'F#4': 3,
+            'E4': 4,
+            'D4': 5, 'D#4': 5,
+            'C4': 6, 'C#4': 6,
+            'B3': 7,
+            'A3': 8, 'A#3': 8,
+            'G3': 9, 'G#3': 9,
+            'F3': 10, 'F#3': 10,
+            'E3': 11,
+            'D3': 12, 'D#3': 12,
+            'C3': 13, 'C#3': 13,
             "Rest": -1
         };
     }
@@ -61,7 +61,8 @@ class Rule {
         return clickedRow != row ? "Rest" : this._idx2note[clickedRow][this._colStates[col]];
     }
     getNoteSeq() {
-        let ret = new Array(this.cols);
+        console.log("test: " + this._config.cols);
+        let ret = new Array(this._config.cols);
         for (let i = 0; i < ret.length; ++i) {
             ret[i] = this.getColNote(i);
         }
@@ -69,12 +70,12 @@ class Rule {
     }
 
     setNoteSeq(noteSeq) {
-        for(let i = noteSeq.length; i < this._config.coln; ++i) {
+        for (let i = noteSeq.length; i < this._config.coln; ++i) {
             noteSeq.push("Rest");
         }
         this._reset(noteSeq.length);
         for (let i = 0; i < noteSeq.length; ++i) {
-            if(noteSeq[i] == "Rest") {
+            if (noteSeq[i] == "Rest") {
                 continue;
             }
             this._rowClicked[i] = this._note2idx[noteSeq[i]];
@@ -98,3 +99,5 @@ class Rule {
     }
 
 }
+
+export { Rule };

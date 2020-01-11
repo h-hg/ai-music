@@ -1,3 +1,11 @@
+import { Colors } from '../Config/Colors';
+import { Config } from '../Config/Config';
+import { Player } from '../Melody/Player';
+import { Controller } from './Controller';
+import { Painter } from './Painter';
+import { Rule } from './Rule';
+
+
 class Grid {
     constructor(canvas, noteSeq) {
         this._config = new Config();
@@ -32,10 +40,10 @@ class Grid {
         return this._rule.getNoteSeq();
     }
     get waitTime() {
-    	return this._controller.waitTime;
+        return this._controller.waitTime;
     }
     set waitTime(val) {
-    	this._controller.waitTime = val;
+        this._controller.waitTime = val;
     }
     get scrollW() {
         return this._config.scrollW;
@@ -53,3 +61,5 @@ class Grid {
         this._controller.resize();
     }
 }
+
+export { Grid };
