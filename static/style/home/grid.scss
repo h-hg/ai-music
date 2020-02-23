@@ -1,0 +1,69 @@
+@charset 'utf-8';
+
+$scrollbar-l: 36px; //滑块宽度
+$scrollbar-padding: 8px; //滑块内边距
+$scrollbar-track-l: $scrollbar-l - 2 * $scrollbar-padding; //滑槽宽度
+
+#grid-container {
+    position: relative;
+}
+
+#grid {
+    height: calc(100% - #{$scrollbar-l});
+    width: calc(100% - #{$scrollbar-l});
+    background-color: red; //test
+}
+
+
+.scrollbar-v {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: calc(100% - #{$scrollbar-l});
+    width: $scrollbar-l;
+    background-color: yellow; //test
+
+    .scrollbar-track-v {
+        position: absolute;
+        margin: $scrollbar-padding;
+        height: calc(100% - 2*#{$scrollbar-padding});
+        width: $scrollbar-track-l;
+        background-color: red;//test
+        border-radius: $scrollbar-track-l / 2;
+
+        .scrollbar-slider-v {
+            position: absolute;
+            height: 50%;//test
+            width: 100%;
+            background-color: green;
+            border-radius: $scrollbar-track-l / 2;
+        }
+    }
+}
+
+
+.scrollbar-h {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: $scrollbar-l;
+    width: calc(100% - #{$scrollbar-l});
+    background-color: yellow; //test
+
+    .scrollbar-track-h {
+        position: absolute;
+        margin: $scrollbar-padding;
+        height: $scrollbar-track-l;
+        width: calc(100% - 2*#{$scrollbar-padding});
+        background-color: red;//test
+        border-radius: $scrollbar-track-l / 2;
+
+        .scrollbar-slider-h {
+            position: absolute;
+            height: 100%;
+            width: 50%;//test
+            background-color: green;//test
+            border-radius: $scrollbar-track-l / 2;
+        }
+    }
+}

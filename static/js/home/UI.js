@@ -1,87 +1,163 @@
-import { Grid } from './Grid/Grid';
-import { ScrollBarH, ScrollBarV } from './ScrollBar/ScrollBar';
-import { Gen } from './Melody/Gen';
+import { Grid } from './grid/Grid';
+import { ScrollBarH, ScrollBarV } from './ScrollBar';
+import { Gen } from './Gen';
 
-let grid = new Grid(document.getElementById("grid"), ['B4', 'A4', 'G4', 'F4', 'E4', 'D4', 'C4', 'B3', 'A3', 'G3', 'F3', 'E3', 'D3', 'C3', 'A#4', 'G#4', 'F#4']);
-
-
-let playBtn = document.getElementById("play-btn");
-let play = function () {
-    if (grid.isPlaying()) {
-        grid.stop();
-        playBtn.innerHTML = "<i class=\"fa fa-play\"></i>";
-    } else {
-        grid.play();
-        playBtn.innerHTML = "<i class=\"fa fa-stop\"></i>";
+class UI {
+    constructor(noteSeq) {
+        this.initElem(noteSeq);
+        this.initListener();
+        this.enableGridContainer();
     }
-};
-playBtn.addEventListener("click", play, false);
+    initElem(noteSeq) {
+        this.gridContainer = document.getElementById("grid-container");
+        this.navBar = document.getElementById("nav-bar");
+        this.controlBar = document.getElementById("control-bar");
 
-let gridScrollBarH = new ScrollBarH(
-    document.getElementById("slider-h"),
-    document.getElementById("track-h"),
-    grid.visibleW,
-    grid.scrollW,
-    "scrollBarHCh"
-);
-let gridScrollBarV = new ScrollBarV(
-    document.getElementById("slider-v"),
-    document.getElementById("track-v"),
-    grid.visibleH,
-    grid.scrollH,
-    "scrollBarVCh"
-);
+        //elem in grid-container
+        this.grid = new Grid(document.getElementById("grid"), noteSeq);
+        this.gridScrollBarH = new ScrollBarH(
+            document.getElementById("slider-h"),
+            document.getElementById("track-h"),
+            this.grid.visibleW,
+            this.grid.scrollW,
+            "scrollBarHCh"
+        );
+        this.gridScrollBarV = new ScrollBarV(
+            document.getElementById("slider-v"),
+            document.getElementById("track-v"),
+            this.grid.visibleH,
+            this.grid.scrollH,
+            "scrollBarVCh"
+        );
+        //control-bar
+        this.playBtn = document.getElementById("play-btn");
 
-let melodyGenerator = new Gen();
-let predictBtn = document.getElementById("predict-btn");
-function predict() {
-    let notes = grid.getNoteSeq();
-    console.log("getNoteSeq");
-    console.log(notes);
-    let generatedMelody = melodyGenerator.genMelody(notes);
-    setTimeout(function () {
-        console.log("After gen:");
-        console.log(generatedMelody);
-        console.log("gen length: " + generatedMelody.length);
-        grid.setNoteSeq(generatedMelody);
-    }, 1000);
+        this.tempoBtn = document.getElementById("tempo-btn");
+
+        this.tempoRange = document.getElementById("tempo-range1");
+        this.tempoVal = document.getElementById("tempo-val1");
+
+        this.predictBtn = document.getElementById("predict-btn");
+        this.instrumentBtn = document.getElementById("instrument-btn");
+        this.saveBtn = document.getElementById("save-btn");
+        this.shareBtn = document.getElementById("share-btn");
+        this.settingBtn = document.getElementById("setting-btn");
+
+        //other
+        this.melodyGen = new Gen();
+
+    }
+    initListener() {
+        //grid-container
+
+        //control-bar
+        this.playBtn.addEventListener("click", function (ev) {
+            if (this.grid.isPlaying()) {
+                this.grid.stop();
+                this.playBtn.innerHTML = "<i class=\"fa fa-play\"></i>";
+            } else {
+                this.grid.play();
+                this.playBtn.innerHTML = "<i class=\"fa fa-stop\"></i>";
+            }
+        }.bind(this), false);
+
+        this.tempoBtn.addEventListener("click", function (ev) {
+            console.log("sdf");
+            $("#tempo-bar").modal();
+            //$("#setting-bar").modal();
+        }.bind(this), false);
+
+        this.tempoRange.addEventListener("change", function (ev) {
+            //miss code
+            let val = ev.target.value;
+            this.tempoVal.innerHTML = val;
+        }.bind(this), false);
+
+        this.predictBtn.addEventListener("click", function (ev) {
+            this.disableGridContainer();
+            let notes = this.grid.getNoteSeq();
+            //console.log("getNoteSeq");
+            //console.log(notes);
+            let generatedMelody = this.melodyGen.genMelody(notes);
+            setTimeout(function () {
+                //console.log("After gen:");
+                //console.log(generatedMelody);
+                //console.log("gen length: " + generatedMelody.length);
+                this.grid.setNoteSeq(generatedMelody);
+            }.bind(this), 1000);
+            this.enableGridContainer();
+        }.bind(this), false);
+
+        this.instrumentBtn.addEventListener("click", function (ev) {
+            //miss code: change the instrument
+        }.bind(this), false);
+
+        this.saveBtn.addEventListener("click", function (ev) {
+            //miss the code
+
+        }.bind(this), false);
+
+        this.shareBtn.addEventListener("click", function (ev) {
+            //missing code: judge whether the user has logged in
+            $("#share-bar").modal();
+        }.bind(this), false);
+
+        this.settingBtn.addEventListener("click", function (ev) {
+            $("#setting-bar").modal();
+        }.bind(this), false);
+
+        //interact
+        document.addEventListener("scrollBarHCh", function (e) {
+            if (this.grid.isPlaying() == false)
+                this.grid.setOffsetX(e.detail.ratio);
+        }.bind(this), false);
+
+        document.addEventListener("scrollBarVCh", function (e) {
+            if (this.grid.isPlaying() == false)
+                this.grid.setOffsetY(e.detail.ratio);
+        }.bind(this), false);
+
+        document.addEventListener("play", function (e) {
+            this.disableGridContainer();
+            //predictBtn.removeEventListener("click", predict, false);/*播放的时候禁止预测，可能需要给那个*/
+        }.bind(this), false);
+
+        document.addEventListener("stop", function (e) {
+            this.enableGridContainer();
+            //predictBtn.addEventListener("click", predict, false);
+        }.bind(this), false);
+
+        document.addEventListener("gridOffsetXRatioCh", function (e) {
+            this.gridScrollBarH.setSliderPos(e.detail.ratio);
+        }.bind(this), false);
+
+        document.addEventListener("gridOffsetYRatioCh", function (e) {
+            this.gridScrollBarV.setSliderPos(e.detail.ratio);
+        }.bind(this), false);
+
+        document.addEventListener("gridScrollWCh", function (e) {
+            this.gridScrollBarH.reset(e.detail.posRatio, e.detail.sliderRatio);
+        }.bind(this), false);
+
+        document.addEventListener("gridScrollHCh", function (e) {
+            this.gridScrollBarV.reset(e.detail.posRatio, e.detail.sliderRatio);
+        }.bind(this), false);
+    }
+    enableGridContainer() {
+        this.grid.enable();
+        this.gridScrollBarH.enable();
+        this.gridScrollBarV.enable();
+    }
+    disableGridContainer() {
+        this.grid.disable();
+        this.gridScrollBarH.disable();
+        this.gridScrollBarV.disable();
+    }
+    resize() {
+        this.gridContainer.style.height = (window.innerHeight - this.navBar.clientHeight - this.controlBar.clientHeight) + "px";
+        //this.gridScrollBarH.resize();
+        //this.gridScrollBarV.resize();
+        this.grid.resize();
+    }
 }
-predictBtn.addEventListener("click", predict, false);
-
-
-document.addEventListener("scrollBarHCh", function (e) {
-    if (grid.isPlaying() == false)
-        grid.setOffsetX(e.detail.ratio);
-}, false);
-document.addEventListener("scrollBarVCh", function (e) {
-    if (grid.isPlaying() == false)
-        grid.setOffsetY(e.detail.ratio);
-}, false);
-document.addEventListener("play", function (e) {
-    gridScrollBarH.disableMove();
-    gridScrollBarV.disableMove();/*播放的时候禁止预测*/
-    predictBtn.removeEventListener("click", predict, false);/*播放的时候禁止预测，可能需要给那个*/
-}, false);
-document.addEventListener("stop", function (e) {
-    gridScrollBarH.enableMove();
-    gridScrollBarV.enableMove();
-    predictBtn.addEventListener("click", predict, false);
-}, false);
-document.addEventListener("gridOffsetXCh", function (e) {
-    gridScrollBarH.setSliderPos(e.detail.ratio);
-}, false);
-
-window.onresize = function () {
-    console.log("onsize " + gridScrollBarH._track.offsetWidth);
-    gridScrollBarH.resize();
-    gridScrollBarV.resize();
-    grid.resize();
-};
-document.addEventListener("gridScrollWCh", function (e) {
-    gridScrollBarH.reset(e.detail.posRatio, e.detail.sliderRatio);
-}, false);
-document.addEventListener("gridScrollHCh", function (e) {
-    gridScrollBarV.reset(e.detail.posRatio, e.detail.sliderRatio);
-}, false);
-//test
-
+export { UI };

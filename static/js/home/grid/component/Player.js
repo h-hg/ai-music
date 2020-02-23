@@ -23,8 +23,6 @@ class Player {
         }
         this.synth.triggerAttackRelease(note, 0.4);
     }
-
-
 }
 
 export { Player };

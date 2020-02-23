@@ -5,50 +5,50 @@ let MiniCssExtractPlugin = require("mini-css-extract-plugin");//将打包后js�
 let TerserWebpackPlugin = require('terser-webpack-plugin');
 let OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-let miniHTMLOptions = {
-    collapseWhitespace: true,
-    removeComments: true,
-    removeRedundantAttributes: true,
-    removeScriptTypeAttributes: true,
-    removeStyleLinkTypeAttributes: true,
-    useShortDoctype: true
-};
 module.exports = {
-    mode: "production",
+    mode: "development", //production(compression) or development
     entry: {
         home: "./webpack/home.webpack.js",
         login: "./webpack/login.webpack.js"
     },
     output: {
         path: path.resolve(__dirname, "dist"),//must be absolute path
-        filename: ".js/[name].[hash:8].js" //[name]: the key of entry
+        filename: "./js/[name].[hash:8].js" //[name]: the key of entry
     },
+    devtool: "source-map",
+    watch: false,
+    watchOptions: {
+        ignored:/(node_modules|bower_components)/,
+        aggregateTimeout: 1000
+    },
+    //externals: {
+    //    jquery: 'jQuery'
+    //},
     resolve: {
         modules: [
             "node_modules"
         ]
     },
-    //插件的书写没有顺序
+
     plugins: [
         new HtmlWebpackPlugin({
             chunks: ["home"],
             template: "./home.html",
             filename: "./index.html", //absolute path is output.path + filename
-            hash: true,
-            minify: miniHTMLOptions 
+            hash: true
         }),
         new HtmlWebpackPlugin({
             chunks: ["login"],
             template: "./login.html",
             filename: "./login.html", //absolute path is output.path + filename
-            hash: true,
-            minify: miniHTMLOptions
+            hash: true
         }),
         new MiniCssExtractPlugin({
             filename: "./style/[name].[hash:8].css", //分配到别的路径
             chunkFilename: "[id].css",
             hash: true
-        })
+        }),
+        new webpack.BannerPlugin("made by h-hg")
     ],
     module: {
         rules: [
@@ -66,12 +66,6 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/
             }
-        ]
-    },
-    optimization: {
-        minimizer:[
-            new TerserWebpackPlugin({}),
-            new OptimizeCSSAssetsPlugin({})
         ]
     }
 };

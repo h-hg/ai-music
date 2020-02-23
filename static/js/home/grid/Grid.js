@@ -1,10 +1,9 @@
-import { Colors } from '../Config/Colors';
-import { Config } from '../Config/Config';
-import { Player } from '../Melody/Player';
-import { Controller } from './Controller';
-import { Painter } from './Painter';
-import { Rule } from './Rule';
-
+import { Colors } from './data/Colors';
+import { Config } from './data/Config';
+import { Player } from './component/Player';
+import { Rule } from './component/Rule';
+import { Painter } from './component/Painter';
+import { Controller } from './component/Controller';
 
 class Grid {
     constructor(canvas, noteSeq) {
@@ -38,6 +37,12 @@ class Grid {
     }
     getNoteSeq() {
         return this._rule.getNoteSeq();
+    }
+    enable() {
+        this._controller.enable();
+    }
+    disable() {
+        this._controller.disable();
     }
     get waitTime() {
         return this._controller.waitTime;

@@ -1,0 +1,26 @@
+.slider {
+    -webkit-appearance: none;
+    outline: none;
+    height: 8px;
+    background: #74A9D8;
+    border-radius: 4px;
+
+    @mixin slider-thumb {
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
+        background: lightsteelblue;
+    }
+    &::-moz-range-thumb {
+        @include slider-thumb;
+    }
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        @include slider-thumb;
+    }
+}
+
+#tempo-range1 {
+    width: 50%;
+    max-width: 340px;
+}
