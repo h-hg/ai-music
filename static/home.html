@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Font Awesome-->
+  <link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <title>Ai Music</title>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark" id="nav-bar"><!-- fixed-top -->
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">Ai Music</a>
+       
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-collapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+       
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="nav-collapse">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="fa fa-user-plus"></i> 注册</a><!-- user -->
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="fa fa-sign-in-alt"></i> 登录</a><!-- sign-out-in -->
+            </li>
+          </ul>
+        </div> 
+      </nav>
+  </header>
+
+  <main id="grid-container">
+    <canvas id="grid"></canvas>
+    <div class="scrollbar-v">
+        <div id="track-v" class="scrollbar-track-v">
+            <div id="slider-v" class="scrollbar-slider-v"></div id="slider-v">
+        </div>
+    </div>
+    <div class="scrollbar-h">
+        <div id="track-h" class="scrollbar-track-h">
+            <div id="slider-h" class="scrollbar-slider-h"></div id="slider-h">
+        </div>
+    </div>
+  </main>
+  
+  <div class="container-fluid" id="control-bar">
+    <div class="row">
+      <div class="col-auto align-self-center">
+        <button id="play-btn" class="button btn border rounded" data-toggle="tooltip" data-placement="top" title="播放"><i class="fa fa-play"></i></button>
+      </div>
+      <div class="col d-none d-lg-block align-self-center text-center">
+        <label for="tempo-range1" class="text-muted">节拍</label>
+        <input id="tempo-range1" type="range" min="1" max="100" value="50" class="slider">
+        <label id="tempo-val1" for="tempo-range" class="text-muted">1000</label>
+      </div>
+      <div class="col col-lg-auto">
+        <div class="row">
+          <div class="col d-lg-none">
+            <button id="tempo-btn" class="button btn border rounded" data-toggle="tooltip" data-placement="top" title="节拍"><i class="fa fa-microphone"></i></button>
+          </div>
+          <div class="col">
+            <button id="predict-btn" class="button btn border rounded" data-toggle="tooltip" data-placement="top" title="预测"><i class="fa fa-music"></i></button>
+          </div>
+          <div class="col">
+            <button id="instrument-btn" class="button btn border rounded" data-toggle="tooltip" data-placement="top" title="乐器"><i class="fas fa-guitar"></i></button>
+          </div>
+          <div class="w-100 d-sm-none"></div>
+          <div class="col">
+            <button id="save-btn" class="button btn border rounded" data-toggle="tooltip" data-placement="top" title="保存"><i class="fa fa-save"></i></button>
+          </div>
+          <div class="col">
+            <button id="share-btn" class="button btn border rounded" data-toggle="tooltip" data-placement="top" title="分享"><i class="fa fa-share"></i></button>
+          </div>
+          <div class="col">
+            <button id="setting-btn" class="button btn border rounded" data-toggle="tooltip" data-placement="top" title="设置"><i class="fa fa-cog"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- share-bar -->
+  <div class="modal fade" id="share-bar" tabindex="-1" role="dialog" aria-labelledby="share-bar-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="share-bar-title">分享成功</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <form>
+            <div class="form-row">
+              <div class="col">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">链接</div>
+                  </div>
+                  <input type="text" class="form-control text-primary" value="https://www.ai-music.com/username/123456789" readonly>
+                </div>
+              </div>
+              <div class="col-auto">
+                <button class="btn border">复制</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--setting-bar-->
+  <div class="modal fade" id="setting-bar" tabindex="-1" role="dialog" aria-labelledby="setting-bar-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="setting-bar-title">设置</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          还未完成，尽请期待！！！
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--tempo-bar-->
+  <div class="modal fade" id="tempo-bar" tabindex="-1" role="dialog" aria-labelledby="tempo-bar-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tempo-bar-title">节拍设置</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+
+          <label for="tempo-range2" class="text-muted">节拍</label>
+          <input id="tempo-range2" type="range" min="1" max="100" value="50" class="slider">
+          <label id="tempo-val2" for="tempo-range" class="text-muted">1000</label>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="../node_modules/jquery/dist/jquery.slim.min.js"></script>
+  <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</html>
